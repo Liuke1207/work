@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			*{margin:0;padding: 0;}
+			ul,li{list-style: none;}
+			.banner{width: 520px;height: 280px;border:5px solid #000;margin:50px auto;position:relative;overflow: hidden;}
+			.banner .img{width:3000px;position:absolute;top:0;left:0;}
+			.banner .img li{float:left;}
+			
+			.banner .num{position:absolute;width: 100%;bottom:10px;left:0;text-align: center;font-size: 0;}
+			.banner .num li{width: 10px;height: 10px;background:#888;border-radius: 50%;display:inline-block;margin: 0 3px;cursor: pointer;}
+			.banner .num li.on{background: #f60;}
+			
+			.banner .btn{position:absolute;top:50%;margin-top:-25px;width: 30px;height: 50px;background:rgba(0,0,0,0.5);font-size:40px;line-height:50px;text-align: center;color:#fff;cursor: pointer;font-family: "宋体";}
+			.banner .left{left:0;}
+			.banner .right{right:0;}
+		</style>
+		<script src="js/jquery-1.11.3.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$(function(){
+				//代码初始化
+				var i=0;
+				var clone=$(".banner .img li").first().clone();
+				$(".banner .img").append(clone);
+				var size=$(".banner .img li").size();
+				for(var j=0;j<size-1;j++){
+					$(".banner .num").append("<li></li>");
+				}
+				
+				$(".banner .num li").first().addClass("on");
+				
+				//鼠标划入圆点
+				$(".banner .num li").hover(function(){
+					var index=$(this).index();
+					i=index;
+					$(".banner .img").stop().animate({left:-index*520},500)
+					$(this).addClass("on").siblings().removeClass("on");
+				})
+				
+				/*自动轮播*/
+				var t=setInterval(function(){
+					i++;
+					move()
+				},2000)
+	
+	
+				/*对banner定时器的操作*/
+				$(".banner").hover(function(){
+					clearInterval(t);
+				},function(){
+					t=setInterval(function(){
+						i++;
+						move()
+					},2000)
+				})
+	
+				/*向左的按钮*/
+				$(".banner .left").click(function(){
+					i++
+					move();	
+				})
+	
+				/*向右的按钮*/
+				$(".banner .right").click(function(){
+					i--
+					move()				
+				})
+	
+				function move(){
+					if(i==size){
+						$(".banner  .img").css({left:0})			
+						i=1;
+					}
+					
+					if(i==-1){
+						$(".banner .img").css({left:-(size-1)*520})
+						i=size-2;
+					}
+					
+					$(".banner .img").stop().animate({left:-i*520},500)	
+					
+					if(i==size-1){
+						$(".banner .num li").eq(0).addClass("on").siblings().removeClass("on")	
+					}else{		
+						$(".banner .num li").eq(i).addClass("on").siblings().removeClass("on")	
+					}
+				}
+			})
+		</script>
+	</head>
+	<body>
+		<div class="banner">
+			<ul class="img">
+				<li><a href="#"><img src="img/1.jpg"></a></li>
+				<li><a href="#"><img src="img/2.jpg"></a></li>
+				<li><a href="#"><img src="img/3.jpg"></a></li>
+				<li><a href="#"><img src="img/4.jpg"></a></li>
+			</ul>
+			
+			<ul class="num">
+				
+			</ul>
+			
+			<div class="left btn">&lt;</div>
+			<div class="right btn">&gt;</div>
+			
+		</div>
+	</body>
+</html>
